@@ -121,15 +121,33 @@ class SetTests(TranspileTestCase):
             """)
 
     def test_intersection(self):
+        # success
         self.assertCodeExecution("""
             x = {1, 2, 3}
             y = {3, 4, 5}
+            w = frozenset([6,8,23,2,4])
             z = x.intersection(y)
-            w = x.intersection([3,4,5])
-            print(x)
-            print(y)
-            print(z)
-            print(w)
+            t = x.intersection([6,8,23],[2,7,5],w,x)
+            l = x.intersection(w)
+            print(sorted(x))
+            print(sorted(y))
+            print(sorted(z))
+            print(sorted(w))
+            print(sorted(t))
+            print(sorted(l))
+            """)
+
+        # failure
+        self.assertCodeExecution("""
+            x = {1, 2, 3}
+            try:
+                z = x.intersection(7)
+            except TypeError as err:
+                print(err)
+            try:
+                t = x.intersection([6,8,23],[2,7,5],9,x)
+            except TypeError as err:
+                print(err)
             """)
 
         self.assertCodeExecution("""
@@ -166,7 +184,7 @@ class SetTests(TranspileTestCase):
         self.assertCodeExecution("""
             x = {1, 2, 3}
             y = {3, 4, 5}
-            w = frozenset([6,8,23])
+            w = frozenset([6,8,23,2,4])
             z = x.union(y)
             t = x.union([6,8,23],[2,7,5],w,x)
             l = x.union(w)
