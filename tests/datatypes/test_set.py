@@ -92,11 +92,12 @@ class SetTests(TranspileTestCase):
             """)
 
     def test_difference(self):
+        # success
         self.assertCodeExecution("""
             x = {1, 2, 3}
             y = {3, 4, 5}
             z = x.difference(y)
-            w = x.difference([3,4,5])
+            w = x.difference([3,4,5],(1,6,7,8),y)
             print(x)
             print(y)
             print(z)
@@ -108,6 +109,10 @@ class SetTests(TranspileTestCase):
             x = set([1, 2, 3])
             try:
                 print(x.difference(1))
+            except TypeError as err:
+                print(err)
+            try:
+                print(x.difference([3,4,5], 1 , (4,6,2)))
             except TypeError as err:
                 print(err)
             """)

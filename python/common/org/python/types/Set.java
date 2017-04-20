@@ -417,20 +417,43 @@ public class Set extends org.python.types.Object {
 
     @org.python.Method(
             __doc__ = "Return the difference of two or more sets as a new set.\n\n(i.e. all elements that are in this set but not the others.)",
-            args = {"other"}
+            args = {"other"},
+            varargs = "moreItems"
     )
-    public org.python.Object difference(org.python.Object other) {
+    public org.python.Object difference(org.python.Object other, org.python.Object moreItems) {
+        org.python.types.Set otherSet = null;
         try {
-            org.python.types.Set otherSet = null;
             if (other instanceof org.python.types.Set) {
                 otherSet = (org.python.types.Set) other;
             } else {
                 otherSet = new org.python.types.Set(new org.python.Object[] {other}, null);
             }
-            return this.__sub__(otherSet);
         } catch (org.python.exceptions.AttributeError e) {
             throw new org.python.exceptions.TypeError("'" + other.typeName() + "' object is not iterable");
         }
+        otherSet = (Set) this.__sub__(otherSet);
+        if (moreItems != null) {
+            org.python.Iterable iter = org.Python.iter(moreItems);
+            while (true) {
+                try {
+                    org.python.types.Set newSet = null;
+                    org.python.Object obj = iter.__next__();
+                    try {
+                        if (obj instanceof org.python.types.Set) {
+                            newSet = (org.python.types.Set) obj;
+                        } else {
+                            newSet = new org.python.types.Set(new org.python.Object[] {obj}, null);
+                        }
+                    } catch (org.python.exceptions.AttributeError e) {
+                        throw new org.python.exceptions.TypeError("'" + other.typeName() + "' object is not iterable");
+                    }
+                    otherSet = (Set) otherSet.__sub__(newSet);
+                } catch (org.python.exceptions.StopIteration e) {
+                    break;
+                }
+            }
+        }
+        return otherSet;
     }
 
     @org.python.Method(
@@ -610,7 +633,7 @@ public class Set extends org.python.types.Object {
         }
         Set union = (Set) (this.union(other, null));
         Set intersection = (Set) (this.intersection(other, null));
-        return union.difference(intersection);
+        return union.difference(intersection, null);
     }
 
     @org.python.Method(
@@ -623,7 +646,7 @@ public class Set extends org.python.types.Object {
         }
         Set union = (Set) (this.union(other, null));
         Set intersection = (Set) (this.intersection(other, null));
-        union = (Set) union.difference(intersection);
+        union = (Set) union.difference(intersection, null);
         this.value = union.value;
         return org.python.types.NoneType.NONE;
     }
