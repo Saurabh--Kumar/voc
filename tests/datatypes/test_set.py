@@ -259,11 +259,25 @@ class SetTests(TranspileTestCase):
             """)
 
     def test_update(self):
+        # successful
         self.assertCodeExecution("""
             x = {1, 2, 3}
             y = {3, 4, 5}
-            print(x.update(y))
+            print(x.update(y,[3,7,89],(1,78,90,2)))
             print(x)
+            """)
+
+        # not iterable test
+        self.assertCodeExecution("""
+            x = set([1, 2, 3])
+            try:
+                x.update(1)
+            except TypeError as err:
+                print(err)
+            try:
+                x.update([3,4,5], 1 , (4,6,2))
+            except TypeError as err:
+                print(err)
             """)
 
     def test_iteration(self):

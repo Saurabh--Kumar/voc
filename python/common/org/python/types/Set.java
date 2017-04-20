@@ -462,7 +462,6 @@ public class Set extends org.python.types.Object {
             varargs = "moreItems"
     )
     public org.python.Object difference_update(org.python.Object other, org.python.Object moreItems) {
-        org.python.types.Set otherSet = null;
         this.value = ((Set) difference(other, moreItems)).value;
         return org.python.types.NoneType.NONE;
     }
@@ -529,7 +528,6 @@ public class Set extends org.python.types.Object {
             varargs = "moreItems"
     )
     public org.python.Object intersection_update(org.python.Object other, org.python.Object moreItems) {
-        org.python.types.Set otherSet = null;
         this.value = ((Set) intersection(other, moreItems)).value;
         return org.python.types.NoneType.NONE;
     }
@@ -695,10 +693,11 @@ public class Set extends org.python.types.Object {
 
     @org.python.Method(
             __doc__ = "Update a set with the union of itself and others.",
-            args = {"other"}
+            args = {"other"},
+            varargs = "moreItems"
     )
-    public org.python.Object update(org.python.Object other) {
-        this.value.addAll(((Set) other).value);
+    public org.python.Object update(org.python.Object other, org.python.Object moreItems) {
+        this.value = ((Set) union(other, moreItems)).value;
         return org.python.types.NoneType.NONE;
     }
 }
