@@ -165,10 +165,16 @@ class SetTests(TranspileTestCase):
         self.assertCodeExecution("""
             x = {1, 2, 3}
             y = {3, 4, 5}
+            w = frozenset([6,8,23])
             z = x.union(y)
-            print(x)
-            print(y)
-            print(z)
+            t = x.union([6,8,23])
+            l = x.union(w)
+            print(sorted(x))
+            print(sorted(y))
+            print(sorted(z))
+            print(sorted(w))
+            print(sorted(t))
+            print(sorted(l))
             """)
 
     def test_difference_update(self):

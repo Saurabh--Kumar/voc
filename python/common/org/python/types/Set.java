@@ -313,12 +313,13 @@ public class Set extends org.python.types.Object {
         throw new org.python.exceptions.TypeError("unsupported operand type(s) for &: '" + this.typeName() + "' and '" + other.typeName() + "'");
     }
 
-    // @org.python.Method(
-    //     __doc__ = ""
-    // )
-    // public org.python.Object __xor__(org.python.Object other) {
-    //     throw new org.python.exceptions.NotImplementedError("__xor__() has not been implemented");
-    // }
+     @org.python.Method(
+         __doc__ = ""
+     )
+     public org.python.Object __xor__(org.python.Object other) {
+         
+         throw new org.python.exceptions.NotImplementedError("__xor__() has not been implemented");
+     }
 
     @org.python.Method(
             __doc__ = ""
@@ -613,8 +614,14 @@ public class Set extends org.python.types.Object {
     public org.python.Object union(org.python.Object other) {
         java.util.Set set = ((Set) this.copy()).value;
         try {
-            set.addAll(((Set) other).value);
-        } catch (ClassCastException te) {
+            org.python.types.Set otherSet = null;
+            if (other instanceof org.python.types.Set) {
+                set.addAll(((org.python.types.Set) other).value);
+            } else {
+                otherSet = new org.python.types.Set(new org.python.Object[] {other}, null);
+                set.addAll(otherSet.value);
+            }
+        } catch (org.python.exceptions.AttributeError e) {
             throw new org.python.exceptions.TypeError("'" + other.typeName() + "' object is not iterable");
         }
         return new Set(set);
