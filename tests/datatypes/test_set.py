@@ -162,12 +162,13 @@ class SetTests(TranspileTestCase):
             """)
 
     def test_union(self):
+        # success
         self.assertCodeExecution("""
             x = {1, 2, 3}
             y = {3, 4, 5}
             w = frozenset([6,8,23])
             z = x.union(y)
-            t = x.union([6,8,23])
+            t = x.union([6,8,23],[2,7,5],w,x)
             l = x.union(w)
             print(sorted(x))
             print(sorted(y))
@@ -175,6 +176,19 @@ class SetTests(TranspileTestCase):
             print(sorted(w))
             print(sorted(t))
             print(sorted(l))
+            """)
+
+        # failure
+        self.assertCodeExecution("""
+            x = {1, 2, 3}
+            try:
+                z = x.union(7)
+            except TypeError as err:
+                print(err)
+            try:
+                t = x.union([6,8,23],[2,7,5],9,x)
+            except TypeError as err:
+                print(err)
             """)
 
     def test_difference_update(self):

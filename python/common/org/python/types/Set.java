@@ -313,13 +313,12 @@ public class Set extends org.python.types.Object {
         throw new org.python.exceptions.TypeError("unsupported operand type(s) for &: '" + this.typeName() + "' and '" + other.typeName() + "'");
     }
 
-     @org.python.Method(
-         __doc__ = ""
-     )
-     public org.python.Object __xor__(org.python.Object other) {
-         
-         throw new org.python.exceptions.NotImplementedError("__xor__() has not been implemented");
-     }
+    @org.python.Method(
+            __doc__ = ""
+    )
+    public org.python.Object __xor__(org.python.Object other) {
+        throw new org.python.exceptions.NotImplementedError("__xor__() has not been implemented");
+    }
 
     @org.python.Method(
             __doc__ = ""
@@ -587,7 +586,7 @@ public class Set extends org.python.types.Object {
         if (other == null) {
             throw new org.python.exceptions.TypeError("symmetric_difference() takes exactly one argument (0 given)");
         }
-        Set union = (Set) (this.union(other));
+        Set union = (Set) (this.union(other, null));
         Set intersection = (Set) (this.intersection(other));
         return union.difference(intersection);
     }
@@ -600,7 +599,7 @@ public class Set extends org.python.types.Object {
         if (other == null) {
             throw new org.python.exceptions.TypeError("symmetric_difference_update() takes exactly one argument (0 given)");
         }
-        Set union = (Set) (this.union(other));
+        Set union = (Set) (this.union(other, null));
         Set intersection = (Set) (this.intersection(other));
         union = (Set) union.difference(intersection);
         this.value = union.value;
@@ -609,9 +608,10 @@ public class Set extends org.python.types.Object {
 
     @org.python.Method(
             __doc__ = "Return the union of sets as a new set.\n\n(i.e. all elements that are in either set.)",
-            args = {"other"}
+            args = {"other"},
+            varargs = "moreItems"
     )
-    public org.python.Object union(org.python.Object other) {
+    public org.python.Object union(org.python.Object other, org.python.Object moreItems) {
         java.util.Set set = ((Set) this.copy()).value;
         try {
             org.python.types.Set otherSet = null;
@@ -623,6 +623,27 @@ public class Set extends org.python.types.Object {
             }
         } catch (org.python.exceptions.AttributeError e) {
             throw new org.python.exceptions.TypeError("'" + other.typeName() + "' object is not iterable");
+        }
+        if (moreItems != null) {
+            org.python.Iterable iter = org.Python.iter(moreItems);
+            while (true) {
+                try {
+                    org.python.Object obj = iter.__next__();
+                    try {
+                        org.python.types.Set otherSet = null;
+                        if (obj instanceof org.python.types.Set) {
+                            set.addAll(((org.python.types.Set) obj).value);
+                        } else {
+                            otherSet = new org.python.types.Set(new org.python.Object[] {obj}, null);
+                            set.addAll(otherSet.value);
+                        }
+                    } catch (org.python.exceptions.AttributeError e) {
+                        throw new org.python.exceptions.TypeError("'" + other.typeName() + "' object is not iterable");
+                    }
+                } catch (org.python.exceptions.StopIteration e) {
+                    break;
+                }
+            }
         }
         return new Set(set);
     }
