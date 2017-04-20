@@ -458,10 +458,12 @@ public class Set extends org.python.types.Object {
 
     @org.python.Method(
             __doc__ = "Remove all elements of another set from this set.",
-            args = {"other"}
+            args = {"other"},
+            varargs = "moreItems"
     )
-    public org.python.Object difference_update(org.python.Object other) {
-        this.value.removeAll(((Set) other).value);
+    public org.python.Object difference_update(org.python.Object other, org.python.Object moreItems) {
+        org.python.types.Set otherSet = null;
+        this.value = ((Set) difference(other, moreItems)).value;
         return org.python.types.NoneType.NONE;
     }
 
