@@ -525,14 +525,12 @@ public class Set extends org.python.types.Object {
 
     @org.python.Method(
             __doc__ = "Update a set with the intersection of itself and another.",
-            args = {"other"}
+            args = {"other"},
+            varargs = "moreItems"
     )
-    public org.python.Object intersection_update(org.python.Object other) {
-        try {
-            this.value.retainAll(((Set) other).value);
-        } catch (ClassCastException te) {
-            throw new org.python.exceptions.TypeError("'" + other.typeName() + "' object is not iterable");
-        }
+    public org.python.Object intersection_update(org.python.Object other, org.python.Object moreItems) {
+        org.python.types.Set otherSet = null;
+        this.value = ((Set) intersection(other, moreItems)).value;
         return org.python.types.NoneType.NONE;
     }
 

@@ -227,21 +227,35 @@ class SetTests(TranspileTestCase):
         self.assertCodeExecution("""
             x = set([1, 2, 3])
             try:
-                x.difference(1)
+                x.difference_update(1)
             except TypeError as err:
                 print(err)
             try:
-                x.difference([3,4,5], 1 , (4,6,2))
+                x.difference_update([3,4,5], 1 , (4,6,2))
             except TypeError as err:
                 print(err)
             """)
 
     def test_intersection_update(self):
+        # successful
         self.assertCodeExecution("""
             x = {1, 2, 3}
             y = {3, 4, 5}
-            x.intersection_update(y)
+            x.intersection_update(y,[1,5,7],(4,7,0))
             print(x)
+            """)
+
+        # not iterable test
+        self.assertCodeExecution("""
+            x = set([1, 2, 3])
+            try:
+                x.intersection_update(1)
+            except TypeError as err:
+                print(err)
+            try:
+                x.intersection_update([3,4,5], 1 , (4,6,2))
+            except TypeError as err:
+                print(err)
             """)
 
     def test_update(self):
