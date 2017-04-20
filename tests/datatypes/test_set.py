@@ -98,10 +98,10 @@ class SetTests(TranspileTestCase):
             y = {3, 4, 5}
             z = x.difference(y)
             w = x.difference([3,4,5],(1,6,7,8),y)
-            print(x)
-            print(y)
-            print(z)
-            print(w)
+            print(sorted(x))
+            print(sorted(y))
+            print(sorted(z))
+            print(sorted(w))
             """)
 
         # not iterable test
@@ -220,7 +220,7 @@ class SetTests(TranspileTestCase):
             x = {1, 2, 3}
             y = {3, 4, 5}
             x.difference_update(y,"abc",[7,8,9],(3,7,6))
-            print(x)
+            print(sorted(x))
             """)
 
         # not iterable test
@@ -242,7 +242,7 @@ class SetTests(TranspileTestCase):
             x = {1, 2, 3}
             y = {3, 4, 5}
             x.intersection_update(y,[1,5,7],(4,7,0))
-            print(x)
+            print(sorted(x))
             """)
 
         # not iterable test
@@ -264,7 +264,7 @@ class SetTests(TranspileTestCase):
             x = {1, 2, 3}
             y = {3, 4, 5}
             print(x.update(y,[3,7,89],(1,78,90,2)))
-            print(x)
+            print(sorted(x))
             """)
 
         # not iterable test
