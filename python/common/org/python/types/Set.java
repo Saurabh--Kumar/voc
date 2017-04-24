@@ -369,33 +369,36 @@ public class Set extends org.python.types.Object {
     //     throw new org.python.exceptions.NotImplementedError("__ror__() has not been implemented");
     // }
 
-    // @org.python.Method(
-    //     __doc__ = ""
-    // )
-    // public void __isub__(org.python.Object other) {
-    //     throw new org.python.exceptions.NotImplementedError("__isub__() has not been implemented");
-    // }
+    @org.python.Method(
+            __doc__ = ""
+    )
+    public org.python.Object __isub__(org.python.Object other) {
+        this.value = ((Set) (this.__sub__(other))).value;
+        return this;
+    }
 
-    // @org.python.Method(
-    //     __doc__ = ""
-    // )
-    // public void __iand__(org.python.Object other) {
-    //     throw new org.python.exceptions.NotImplementedError("__iand__() has not been implemented");
-    // }
+    @org.python.Method(
+            __doc__ = ""
+    )
+    public org.python.Object __iand__(org.python.Object other) {
+        this.value = ((Set) (this.__and__(other))).value;
+        return this;
+    }
 
-    // @org.python.Method(
-    //     __doc__ = ""
-    // )
-    // public void __ixor__(org.python.Object other) {
-    //     throw new org.python.exceptions.NotImplementedError("__ixor__() has not been implemented");
-    // }
-
-    // @org.python.Method(
-    //     __doc__ = ""
-    // )
-    // public void __ior__(org.python.Object other) {
-    //     throw new org.python.exceptions.NotImplementedError("__ior__() has not been implemented");
-    // }
+    @org.python.Method(
+            __doc__ = ""
+    )
+    public org.python.Object __ixor__(org.python.Object other) {
+        this.value = ((Set) (this.__xor__(other))).value;
+        return this;
+    }
+    @org.python.Method(
+            __doc__ = ""
+    )
+    public org.python.Object __ior__(org.python.Object other) {
+        this.value = ((Set) (this.__or__(other))).value;
+        return this;
+    }
 
     @org.python.Method(
             __doc__ = "",
