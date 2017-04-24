@@ -313,12 +313,14 @@ public class Set extends org.python.types.Object {
         throw new org.python.exceptions.TypeError("unsupported operand type(s) for &: '" + this.typeName() + "' and '" + other.typeName() + "'");
     }
 
-    // @org.python.Method(
-    //     __doc__ = ""
-    // )
-    // public org.python.Object __xor__(org.python.Object other) {
-    //     throw new org.python.exceptions.NotImplementedError("__xor__() has not been implemented");
-    // }
+    @org.python.Method(
+            __doc__ = ""
+    )
+    public org.python.Object __xor__(org.python.Object other) {
+        Set xorSet = (Set) this.copy();
+        xorSet = (Set) xorSet.symmetric_difference(other);
+        return xorSet;
+    }
 
     @org.python.Method(
             __doc__ = ""
