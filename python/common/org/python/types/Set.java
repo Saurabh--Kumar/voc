@@ -373,31 +373,47 @@ public class Set extends org.python.types.Object {
             __doc__ = ""
     )
     public org.python.Object __isub__(org.python.Object other) {
-        this.value = ((Set) (this.__sub__(other))).value;
-        return this;
+        if (other instanceof org.python.types.Set || other instanceof org.python.types.FrozenSet) {
+            this.value = ((Set) (this.__sub__(other))).value;
+            return this;
+        } else {
+            throw new org.python.exceptions.TypeError("unsupported operand type(s) for -=: '" + this.typeName() + "' and '" + other.typeName() + "'");
+        }
     }
 
     @org.python.Method(
             __doc__ = ""
     )
     public org.python.Object __iand__(org.python.Object other) {
-        this.value = ((Set) (this.__and__(other))).value;
-        return this;
+        if (other instanceof org.python.types.Set || other instanceof org.python.types.FrozenSet) {
+            this.value = ((Set) (this.__and__(other))).value;
+            return this;
+        } else {
+            throw new org.python.exceptions.TypeError("unsupported operand type(s) for &=: '" + this.typeName() + "' and '" + other.typeName() + "'");
+        }
     }
 
     @org.python.Method(
             __doc__ = ""
     )
     public org.python.Object __ixor__(org.python.Object other) {
-        this.value = ((Set) (this.__xor__(other))).value;
-        return this;
+        if (other instanceof org.python.types.Set || other instanceof org.python.types.FrozenSet) {
+            this.value = ((Set) (this.__xor__(other))).value;
+            return this;
+        } else {
+            throw new org.python.exceptions.TypeError("unsupported operand type(s) for ^=: '" + this.typeName() + "' and '" + other.typeName() + "'");
+        }
     }
     @org.python.Method(
             __doc__ = ""
     )
     public org.python.Object __ior__(org.python.Object other) {
-        this.value = ((Set) (this.__or__(other))).value;
-        return this;
+        if (other instanceof org.python.types.Set || other instanceof org.python.types.FrozenSet) {
+            this.value = ((Set) (this.__or__(other))).value;
+            return this;
+        } else {
+            throw new org.python.exceptions.TypeError("unsupported operand type(s) for |=: '" + this.typeName() + "' and '" + other.typeName() + "'");
+        }
     }
 
     @org.python.Method(
