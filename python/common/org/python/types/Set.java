@@ -317,9 +317,13 @@ public class Set extends org.python.types.Object {
             __doc__ = ""
     )
     public org.python.Object __xor__(org.python.Object other) {
-        Set xorSet = (Set) this.copy();
-        xorSet = (Set) xorSet.symmetric_difference(other);
-        return xorSet;
+        if (other instanceof org.python.types.Set || other instanceof org.python.types.FrozenSet) {
+            Set xorSet = (Set) this.copy();
+            xorSet = (Set) xorSet.symmetric_difference(other);
+            return xorSet;
+        } else {
+            throw new org.python.exceptions.TypeError("unsupported operand type(s) for ^: '" + this.typeName() + "' and '" + other.typeName() + "'");
+        }
     }
 
     @org.python.Method(
