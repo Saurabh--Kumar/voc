@@ -98,6 +98,7 @@ class SetTests(TranspileTestCase):
             y = {3, 4, 5}
             z = x.difference(y)
             w = x.difference([3,4,5],(1,6,7,8),y)
+            print(x.difference())
             print(sorted(x))
             print(sorted(y))
             print(sorted(z))
@@ -134,6 +135,7 @@ class SetTests(TranspileTestCase):
             z = x.intersection(y)
             t = x.intersection([6,8,23],[2,7,5],w,x)
             l = x.intersection(w)
+            print(sorted(x.intersection()))
             print(sorted(x))
             print(sorted(y))
             print(sorted(z))
@@ -193,6 +195,7 @@ class SetTests(TranspileTestCase):
             z = x.union(y)
             t = x.union([6,8,23],[2,7,5],w,x)
             l = x.union(w)
+            print(sorted(x.union()))
             print(sorted(x))
             print(sorted(y))
             print(sorted(z))
@@ -221,6 +224,10 @@ class SetTests(TranspileTestCase):
             y = {3, 4, 5}
             x.difference_update(y,"abc",[7,8,9],(3,7,6))
             print(sorted(x))
+            y.difference_update(x)
+            print(sorted(x))
+            x.difference_update()
+            print(sorted(x))
             """)
 
         # not iterable test
@@ -243,6 +250,10 @@ class SetTests(TranspileTestCase):
             y = {3, 4, 5}
             x.intersection_update(y,[1,5,7],(4,7,0))
             print(sorted(x))
+            y.intersection_update(x)
+            print(sorted(y))
+            y.intersection_update()
+            print(sorted(y))
             """)
 
         # not iterable test
@@ -265,6 +276,10 @@ class SetTests(TranspileTestCase):
             y = {3, 4, 5}
             print(x.update(y,[3,7,89],(1,78,90,2)))
             print(sorted(x))
+            print(y.update(y))
+            print(sorted(y))
+            print(y.update())
+            print(sorted(y))
             """)
 
         # not iterable test
@@ -374,8 +389,8 @@ class SetTests(TranspileTestCase):
             t = set()
             print(sorted(x.symmetric_difference(y)))
             print(sorted(x.symmetric_difference(z)))
-            print(sorted(t.symmetric_difference(z)))
-            print(sorted(t.symmetric_difference(y)))
+            #print(sorted(t.symmetric_difference(z)))
+            #print(sorted(t.symmetric_difference(y)))
             """)
 
         # unsuccessful
@@ -390,10 +405,6 @@ class SetTests(TranspileTestCase):
                 print(err)
             try:
                 print(l.symmetric_difference(x))
-            except TypeError as err:
-                print(err)
-            try:
-                print(l.symmetric_difference())
             except TypeError as err:
                 print(err)
             """)
@@ -427,10 +438,6 @@ class SetTests(TranspileTestCase):
                 print(err)
             try:
                 print(l.symmetric_difference_update(x))
-            except TypeError as err:
-                print(err)
-            try:
-                print(l.symmetric_difference_update())
             except TypeError as err:
                 print(err)
             """)

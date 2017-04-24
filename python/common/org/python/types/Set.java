@@ -417,23 +417,12 @@ public class Set extends org.python.types.Object {
 
     @org.python.Method(
             __doc__ = "Return the difference of two or more sets as a new set.\n\n(i.e. all elements that are in this set but not the others.)",
-            args = {"other"},
             varargs = "moreItems"
     )
-    public org.python.Object difference(org.python.Object other, org.python.Object moreItems) {
-        org.python.types.Set otherSet = null;
-        try {
-            if (other instanceof org.python.types.Set) {
-                otherSet = (org.python.types.Set) other;
-            } else {
-                otherSet = new org.python.types.Set(new org.python.Object[] {other}, null);
-            }
-        } catch (org.python.exceptions.AttributeError e) {
-            throw new org.python.exceptions.TypeError("'" + other.typeName() + "' object is not iterable");
-        }
-        otherSet = (Set) this.__sub__(otherSet);
-        if (moreItems != null) {
-            org.python.Iterable iter = org.Python.iter(moreItems);
+    public org.python.Object difference(org.python.Object items) {
+        org.python.types.Set otherSet = (Set) this.copy();
+        if (items != null) {
+            org.python.Iterable iter = org.Python.iter(items);
             while (true) {
                 try {
                     org.python.types.Set newSet = null;
@@ -445,7 +434,7 @@ public class Set extends org.python.types.Object {
                             newSet = new org.python.types.Set(new org.python.Object[] {obj}, null);
                         }
                     } catch (org.python.exceptions.AttributeError e) {
-                        throw new org.python.exceptions.TypeError("'" + other.typeName() + "' object is not iterable");
+                        throw new org.python.exceptions.TypeError("'" + obj.typeName() + "' object is not iterable");
                     }
                     otherSet = (Set) otherSet.__sub__(newSet);
                 } catch (org.python.exceptions.StopIteration e) {
@@ -458,11 +447,10 @@ public class Set extends org.python.types.Object {
 
     @org.python.Method(
             __doc__ = "Remove all elements of another set from this set.",
-            args = {"other"},
             varargs = "moreItems"
     )
-    public org.python.Object difference_update(org.python.Object other, org.python.Object moreItems) {
-        this.value = ((Set) difference(other, moreItems)).value;
+    public org.python.Object difference_update(org.python.Object items) {
+        this.value = ((Set) difference(items)).value;
         return org.python.types.NoneType.NONE;
     }
 
@@ -484,22 +472,12 @@ public class Set extends org.python.types.Object {
 
     @org.python.Method(
             __doc__ = "Return a new set with elements common to the set and all others.",
-            args = {"other"},
             varargs = "moreItems"
     )
-    public org.python.Object intersection(org.python.Object other, org.python.Object moreItems) {
-        org.python.types.Set otherSet = null;
-        try {
-            if (other instanceof org.python.types.Set) {
-                otherSet = (org.python.types.Set) other;
-            } else {
-                otherSet = new org.python.types.Set(new org.python.Object[] {other}, null);
-            }
-        } catch (org.python.exceptions.AttributeError e) {
-            throw new org.python.exceptions.TypeError("'" + other.typeName() + "' object is not iterable");
-        }
-        if (moreItems != null) {
-            org.python.Iterable iter = org.Python.iter(moreItems);
+    public org.python.Object intersection(org.python.Object items) {
+        org.python.types.Set otherSet = (Set) this.copy();
+        if (items != null) {
+            org.python.Iterable iter = org.Python.iter(items);
             while (true) {
                 try {
                     org.python.types.Set newSet = null;
@@ -511,7 +489,7 @@ public class Set extends org.python.types.Object {
                             newSet = new org.python.types.Set(new org.python.Object[] {obj}, null);
                         }
                     } catch (org.python.exceptions.AttributeError e) {
-                        throw new org.python.exceptions.TypeError("'" + other.typeName() + "' object is not iterable");
+                        throw new org.python.exceptions.TypeError("'" + obj.typeName() + "' object is not iterable");
                     }
                     otherSet = (Set) otherSet.__and__(newSet);
                 } catch (org.python.exceptions.StopIteration e) {
@@ -519,16 +497,15 @@ public class Set extends org.python.types.Object {
                 }
             }
         }
-        return this.__and__(otherSet);
+        return otherSet;
     }
 
     @org.python.Method(
             __doc__ = "Update a set with the intersection of itself and another.",
-            args = {"other"},
             varargs = "moreItems"
     )
-    public org.python.Object intersection_update(org.python.Object other, org.python.Object moreItems) {
-        this.value = ((Set) intersection(other, moreItems)).value;
+    public org.python.Object intersection_update(org.python.Object items) {
+        this.value = ((Set) intersection(items)).value;
         return org.python.types.NoneType.NONE;
     }
 
@@ -626,12 +603,19 @@ public class Set extends org.python.types.Object {
             default_args = {"other"}
     )
     public org.python.Object symmetric_difference(org.python.Object other) {
-        if (other == null) {
-            throw new org.python.exceptions.TypeError("symmetric_difference() takes exactly one argument (0 given)");
+        org.python.types.Set otherSet = null;
+        try {
+            if (other instanceof org.python.types.Set) {
+                otherSet = (org.python.types.Set) other;
+            } else {
+                otherSet = new org.python.types.Set(new org.python.Object[] {other}, null);
+            }
+        } catch (org.python.exceptions.AttributeError e) {
+            throw new org.python.exceptions.TypeError("'" + other.typeName() + "' object is not iterable");
         }
-        Set union = (Set) (this.union(other, null));
-        Set intersection = (Set) (this.intersection(other, null));
-        return union.difference(intersection, null);
+        Set first = (Set) (this.difference(otherSet));
+        Set second = (Set) (otherSet.difference(this.copy()));
+        return first.union(second);
     }
 
     @org.python.Method(
@@ -639,36 +623,18 @@ public class Set extends org.python.types.Object {
             default_args = {"other"}
     )
     public org.python.Object symmetric_difference_update(org.python.Object other) {
-        if (other == null) {
-            throw new org.python.exceptions.TypeError("symmetric_difference_update() takes exactly one argument (0 given)");
-        }
-        Set union = (Set) (this.union(other, null));
-        Set intersection = (Set) (this.intersection(other, null));
-        union = (Set) union.difference(intersection, null);
-        this.value = union.value;
+        this.value = ((Set) symmetric_difference(other)).value;
         return org.python.types.NoneType.NONE;
     }
 
     @org.python.Method(
             __doc__ = "Return a new set with elements from the set and all others.",
-            args = {"other"},
             varargs = "moreItems"
     )
-    public org.python.Object union(org.python.Object other, org.python.Object moreItems) {
+    public org.python.Object union(org.python.Object items) {
         java.util.Set set = ((Set) this.copy()).value;
-        try {
-            org.python.types.Set otherSet = null;
-            if (other instanceof org.python.types.Set) {
-                set.addAll(((org.python.types.Set) other).value);
-            } else {
-                otherSet = new org.python.types.Set(new org.python.Object[] {other}, null);
-                set.addAll(otherSet.value);
-            }
-        } catch (org.python.exceptions.AttributeError e) {
-            throw new org.python.exceptions.TypeError("'" + other.typeName() + "' object is not iterable");
-        }
-        if (moreItems != null) {
-            org.python.Iterable iter = org.Python.iter(moreItems);
+        if (items != null) {
+            org.python.Iterable iter = org.Python.iter(items);
             while (true) {
                 try {
                     org.python.Object obj = iter.__next__();
@@ -681,7 +647,7 @@ public class Set extends org.python.types.Object {
                             set.addAll(otherSet.value);
                         }
                     } catch (org.python.exceptions.AttributeError e) {
-                        throw new org.python.exceptions.TypeError("'" + other.typeName() + "' object is not iterable");
+                        throw new org.python.exceptions.TypeError("'" + obj.typeName() + "' object is not iterable");
                     }
                 } catch (org.python.exceptions.StopIteration e) {
                     break;
@@ -693,11 +659,10 @@ public class Set extends org.python.types.Object {
 
     @org.python.Method(
             __doc__ = "Update a set with the union of itself and others.",
-            args = {"other"},
             varargs = "moreItems"
     )
-    public org.python.Object update(org.python.Object other, org.python.Object moreItems) {
-        this.value = ((Set) union(other, moreItems)).value;
+    public org.python.Object update(org.python.Object items) {
+        this.value = ((Set) union(items)).value;
         return org.python.types.NoneType.NONE;
     }
 }
